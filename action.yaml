@@ -1,0 +1,43 @@
+name: "KW: CloudFlare - Create Access Application"
+description: "Create CloudFlare ZeroTrust Access Application (self-hosted) with policies and IDPs"
+author: "KouraWealth"
+
+inputs:
+  name:
+    description: "Access Application name"
+    required: true
+  domain:
+    description: "The URL the application represents (eg. example.com/uri)"
+    required: true
+  idps:
+    description: "Allowed IDPs (comma separated list of IDP IDs)"
+    required: true
+  app_launcher_visible:
+    description: "Whether the application should be visible in the app launcher"
+    required: false
+    default: "false"
+  auto_redirect_to_identity:
+    description: "Whether to automatically redirect to identity provider if there is only one IDP"
+    required: false
+    default: "false"
+  policies:
+    description: "Access policies (comma separated list of IDs)"
+    required: true
+  account_id:
+    description: "CloudFlare Account ID"
+    required: true
+  token:
+    description: "CloudFlare API token"
+    required: true
+
+outputs:
+  id:
+    description: "Access Application ID"
+
+runs:
+  using: "node20"
+  main: "main.js"
+
+branding:
+  icon: "globe"
+  color: "green"
