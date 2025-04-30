@@ -36,14 +36,20 @@ const getCurrentAppId = () => {
   const { success, result, errors } = JSON.parse(stdout.toString());
 
   if (!success) {
-    console.log(`::error ::${errors[0].message}`);
+    console.log(`::error::${errors[0].message}`);
     process.exit(1);
   }
 
   const name = process.env.INPUT_NAME;
+
+  result.forEach((x) => {
+    console.log(`Found an existing Access application: '${x.name}' (${x.id})`);
+  });
+
   const record = result.find((x) => x.name === name);
 
   if (!record) {
+    console.log(`::notice::No Access application found with name '${name}'`);
     return null
   }
 
@@ -78,7 +84,7 @@ const createApp = () => {
 
   if (!success) {
     console.dir(errors[0]);
-    console.log(`::error ::${errors[0].message}`);
+    console.log(`::error::${errors[0].message}`);
     process.exit(1);
   }
   console.log("Created a new Access application");
@@ -111,7 +117,7 @@ const updateApp = (id) => {
 
   if (!success) {
     console.dir(errors[0]);
-    console.log(`::error ::${errors[0].message}`);
+    console.log(`::error::${errors[0].message}`);
     process.exit(1);
   }
   console.log("Updated the existing Access application");
