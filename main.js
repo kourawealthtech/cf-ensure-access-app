@@ -99,6 +99,7 @@ const updateApp = (id) => {
     ...["--header", "Content-Type: application/json"],
     ...["--silent", "--data"],
     JSON.stringify({
+      name: process.env.INPUT_NAME,
       domain: process.env.INPUT_DOMAIN,
       type: "self_hosted",
       auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
