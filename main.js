@@ -81,6 +81,7 @@ const createApp = () => {
     console.log(`::error ::${errors[0].message}`);
     process.exit(1);
   }
+  console.log("Created a new Access application");
 
   setOutput('id', result.id);
 };
@@ -113,6 +114,7 @@ const updateApp = (id) => {
     console.log(`::error ::${errors[0].message}`);
     process.exit(1);
   }
+  console.log("Updated the existing Access application");
 
   setOutput('id', id);
 }
