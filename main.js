@@ -85,7 +85,41 @@ const createApp = () => {
   setOutput('id', result.id);
 };
 
+const updateApp = (id) => {
+  const { status, stdout } = cp.spawnSync("curl", [
+    ...["--request", "PUT"],
+    ...["--header", `Authorization: Bearer ${process.env.INPUT_TOKEN}`],
+    ...["--header", "Content-Type: application/json"],
+    ...["--silent", "--data"],
+    JSON.stringify({
+      domain: process.env.INPUT_DOMAIN,
+      type: "self_hosted",
+      auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
+      app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
+      allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
+      policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
+    }),
+    `${CF_API_BASE_URL}/accounts/${process.env.INPUT_ACCOUNT_ID}/access/apps/${id}`,
+  ]);
+
+  if (status !== 0) {
+    process.exit(status);
+  }
+
+  const { success, result, errors } = JSON.parse(stdout.toString());
+
+  if (!success) {
+    console.dir(errors[0]);
+    console.log(`::error ::${errors[0].message}`);
+    process.exit(1);
+  }
+
+  setOutput('id', id);
+}
+
 const id = getCurrentAppId();
 if (!id) {
-  createApp(id);
+  createApp();
+} else {
+  updateApp(id);
 }
