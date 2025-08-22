@@ -58,7 +58,7 @@ const getCurrentAppId = () => {
 };
 
 const createApp = () => {
-  // https://api.cloudflare.com/#dns-records-for-a-zone-create-dns-record
+  // https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/
   const { status, stdout } = cp.spawnSync("curl", [
     ...["--request", "POST"],
     ...["--header", `Authorization: Bearer ${process.env.INPUT_TOKEN}`],
@@ -72,6 +72,7 @@ const createApp = () => {
       app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
       allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
       policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
+      options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
     }),
     `${CF_API_BASE_URL}/accounts/${process.env.INPUT_ACCOUNT_ID}/access/apps`,
   ]);
@@ -93,6 +94,7 @@ const createApp = () => {
 };
 
 const updateApp = (id) => {
+  // https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/update/
   const { status, stdout } = cp.spawnSync("curl", [
     ...["--request", "PUT"],
     ...["--header", `Authorization: Bearer ${process.env.INPUT_TOKEN}`],
@@ -106,6 +108,7 @@ const updateApp = (id) => {
       app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
       allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
       policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
+      options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
     }),
     `${CF_API_BASE_URL}/accounts/${process.env.INPUT_ACCOUNT_ID}/access/apps/${id}`,
   ]);

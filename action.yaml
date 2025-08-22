@@ -20,6 +20,10 @@ inputs:
     description: "Whether to automatically redirect to identity provider if there is only one IDP"
     required: false
     default: "false"
+  preflight_bypass:
+    description: "Allows options preflight requests to bypass Access authentication and go directly to the origin"
+    required: false
+    default: "true"
   policies:
     description: "Access policies (comma separated list of IDs)"
     required: true
