@@ -68,7 +68,7 @@ const desiredConfig = () => {
     options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
   }
   if (process.env.INPUT_DESTINATIONS?.trim().length) {
-    const uris = process.env.INPUT_DESTINATIONS.trim().split(/[,\n]/).map((x) => x.trim()).filter((uri) => uri.length);
+    const uris = process.env.INPUT_DESTINATIONS.trim().split(/[,\s]/).map((x) => x.trim()).filter((uri) => uri.length);
     config.domain = uris[0];
     config.self_hosted_domains = uris;
   } else {
