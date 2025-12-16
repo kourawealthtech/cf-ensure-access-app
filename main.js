@@ -59,6 +59,7 @@ const getCurrentAppId = () => {
 
 const desiredConfig = () => {
   const config = {
+    name: process.env.INPUT_NAME,
     type: "self_hosted",
     auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
     app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
@@ -68,9 +69,9 @@ const desiredConfig = () => {
   }
   if (process.env.INPUT_DESTINATIONS?.trim().length) {
     const uris = process.env.INPUT_DESTINATIONS.trim().split(/[,\n]/).map((x) => x.trim());
-    config.destinations = uris.map((uri) => ({ type: 'public', uri }));
+    config.domain = uris[0];
+    config.self_hosted_domains = uris;
   } else {
-    config.name = process.env.INPUT_NAME;
     config.domain = process.env.INPUT_DOMAIN;
   }
 
