@@ -75,6 +75,8 @@ const desiredConfig = () => {
     config.domain = process.env.INPUT_DOMAIN;
   }
 
+  console.log("Desired Access application configuration:", config);
+
   return config;
 };
 
