@@ -57,6 +57,26 @@ const getCurrentAppId = () => {
   return record.id;
 };
 
+const desiredConfig = () => {
+  const config = {
+    type: "self_hosted",
+    auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
+    app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
+    allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
+    policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
+    options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
+  }
+  if (process.env.INPUT_DESTINATIONS?.trim().length) {
+    const uris = process.env.INPUT_DESTINATIONS.trim().split(/[,\n]/).map((x) => x.trim());
+    config.destinations = uris.map((uri) => ({ type: 'public', uri }));
+  } else {
+    config.name = process.env.INPUT_NAME;
+    config.domain = process.env.INPUT_DOMAIN;
+  }
+
+  return config;
+};
+
 const createApp = () => {
   // https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/applications/methods/create/
   const { status, stdout } = cp.spawnSync("curl", [
@@ -64,16 +84,7 @@ const createApp = () => {
     ...["--header", `Authorization: Bearer ${process.env.INPUT_TOKEN}`],
     ...["--header", "Content-Type: application/json"],
     ...["--silent", "--data"],
-    JSON.stringify({
-      name: process.env.INPUT_NAME,
-      domain: process.env.INPUT_DOMAIN,
-      type: "self_hosted",
-      auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
-      app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
-      allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
-      policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
-      options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
-    }),
+    JSON.stringify(desiredConfig()),
     `${CF_API_BASE_URL}/accounts/${process.env.INPUT_ACCOUNT_ID}/access/apps`,
   ]);
 
@@ -100,16 +111,7 @@ const updateApp = (id) => {
     ...["--header", `Authorization: Bearer ${process.env.INPUT_TOKEN}`],
     ...["--header", "Content-Type: application/json"],
     ...["--silent", "--data"],
-    JSON.stringify({
-      name: process.env.INPUT_NAME,
-      domain: process.env.INPUT_DOMAIN,
-      type: "self_hosted",
-      auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
-      app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
-      allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
-      policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
-      options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
-    }),
+    JSON.stringify(desiredConfig()),
     `${CF_API_BASE_URL}/accounts/${process.env.INPUT_ACCOUNT_ID}/access/apps/${id}`,
   ]);
 

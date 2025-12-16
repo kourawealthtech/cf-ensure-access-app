@@ -8,7 +8,10 @@ inputs:
     required: true
   domain:
     description: "The URL the application represents (eg. example.com/uri)"
-    required: true
+    required: false
+  destinations:
+    description: "Access Application destinations (comma or newline separated list of URIs)"
+    required: false
   idps:
     description: "Allowed IDPs (comma separated list of IDP IDs)"
     required: true

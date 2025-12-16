@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 
-if [ -z "$INPUT_TOKEN" || -z "$INPUT_NAME" || -z "$INPUT_DOMAIN" || -z "$INPUT_IDPS" || -z "$INPUT_POLICIES" ] ; then
+if [ -z "$INPUT_DESTINATIONS" ] && [ -z "$INPUT_DOMAIN" ] ; then
+  echo "Specify Destinations or Domain. Exiting..."
+  exit 1
+fi
+
+if [ -z "$INPUT_NAME" ] || [ -z "$INPUT_TOKEN" ] || [ -z "$INPUT_IDPS" ] || [ -z "$INPUT_POLICIES" ] ; then
   echo "One of the required params is empty. Please check all input params. Exiting..."
   exit 1
 fi
