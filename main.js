@@ -63,9 +63,14 @@ const desiredConfig = () => {
     type: "self_hosted",
     auto_redirect_to_identity: process.env.INPUT_AUTO_REDIRECT_TO_IDENTITY === "true",
     app_launcher_visible: process.env.INPUT_APP_LAUNCHER_VISIBLE === "true",
-    allowed_idps: process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim()),
     policies: process.env.INPUT_POLICIES.trim().split(",").map((x) => x.trim()),
     options_preflight_bypass: process.env.INPUT_PREFLIGHT_BYPASS !== "false",
+  }
+  // Bypass-only applications (e.g. a policy with decision=bypass) have no
+  // identity provider at all — omit allowed_idps rather than sending the API
+  // an empty/invalid IDP list.
+  if (process.env.INPUT_IDPS?.trim().length) {
+    config.allowed_idps = process.env.INPUT_IDPS.trim().split(",").map((x) => x.trim());
   }
   if (process.env.INPUT_DESTINATIONS?.trim().length) {
     const uris = process.env.INPUT_DESTINATIONS.trim().split(/[,\s]/).map((x) => x.trim()).filter((uri) => uri.length);

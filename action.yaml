@@ -13,8 +13,9 @@ inputs:
     description: "Access Application destinations (comma or newline separated list of URIs)"
     required: false
   idps:
-    description: "Allowed IDPs (comma separated list of IDP IDs)"
-    required: true
+    description: "Allowed IDPs (comma separated list of IDP IDs). Omit for a bypass-only application (e.g. a policy with decision=bypass) that has no identity provider at all."
+    required: false
+    default: ""
   app_launcher_visible:
     description: "Whether the application should be visible in the app launcher"
     required: false
